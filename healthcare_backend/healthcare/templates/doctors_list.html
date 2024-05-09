@@ -1,0 +1,27 @@
+<!-- healthcare_backend/healthcare/templates/doctors_list.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Doctors</title>
+</head>
+<body>
+    <h1>Available Doctors</h1>
+    <ul>
+        {% for doctor in doctors %}
+            <li>
+                <h2>{{ doctor.name }}</h2>
+                <p>Specialty: {{ doctor.specialty }}</p>
+                <h3>Availability:</h3>
+                <ul>
+                    {% for slot in doctor.availability %}
+                        <li>{{ slot.day }}, {{ slot.date }}: {% for time in slot.slots %}{{ time }}{% if not forloop.last %}, {% endif %}{% endfor %}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
