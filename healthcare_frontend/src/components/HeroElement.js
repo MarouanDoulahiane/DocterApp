@@ -1,27 +1,24 @@
-// Let's create a new component called HeroElement.js in the components folder. This component will contain the hero element of our application.
-
 import React from 'react';
 import { Link } from 'react-router-dom';
+import doctorsImage from '../images/doctors.png';
 
 const HeroElement = () => {
     return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="text-center">
-                <h1 className="text-4xl font-bold mb-6">Welcome to Healthcare Consultation</h1>
-                <div className="space-x-4">
-                    <Link to="/login">
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Login
-                        </button>
-                    </Link>
-                    <Link to="/register">
-                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                            Register
-                        </button>
-                    </Link>
+        <>
+            <div className="flex flex-col md:flex-row items-center justify-center md:justify-between p-4 mt-16">
+                {/* Hero Session */}
+                <div className="text-center md:text-left md:w-1/2">
+                    <h2 className="text-3xl font-bold text-gray-800 font-light ">Skip the travel! Take Online</h2>
+                    <h1 className='text-6xl font-bold mb-4'>Doctor <span className='text-blue-500'>Consultation</span></h1>
+                    <p className='text-gray-800 text-lg font-light mb-6 md:w-[75%]'>Connect instantly with a 24x7 specialist or choose to video visit a particular doctor.</p>
+                    <Link to='/consult' className='bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md'>Consult Now</Link>
+                </div>
+                {/* Image */}
+                <div className="hidden md:block md:w-[50%] flex justify-end">
+                    <img src={doctorsImage} alt="Doctors" className="w-full rounded-lg" /> {/* Apply Tailwind CSS classes for styling */}
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 
