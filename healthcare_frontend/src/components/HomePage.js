@@ -9,7 +9,7 @@ import SearchBar from './SearchBar';
 
 const HomePage = () => {
     return (
-        <div className='h-screen bg-gradient-to-r from-[#E8F1FF] to-[#FFFFFF]'>
+        <div className='h-screen bg-gradient-to-r from-[#E7F0FF] to-[#E8F1FF]'>
             <NavBar />
             <div className="container mx-auto">
                 <HeroElement />
