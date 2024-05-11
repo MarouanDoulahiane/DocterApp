@@ -1,5 +1,3 @@
-// DoctorListPage.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -24,10 +22,14 @@ const DoctorListPage = () => {
     console.log('Book appointment:', `Doctor ID: ${doctorId}, Slot: ${slot}`);
   };
 
+
+  
+
   return (
-    <ul className="grid grid-cols-1 gap-8">
-      {doctors.map((doctor) => (
-        <li key={doctor.id} className="bg-white rounded-lg shadow-md">
+    <div className="container mx-auto p-12  ">
+      <ul className="grid grid-cols-1 gap-8">
+        {doctors.map((doctor) => (
+          <li key={doctor.id} className="bg-white rounded-lg shadow-md">
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div className="p-6">
               <img src="https://media.licdn.com/dms/image/D4E35AQGR5Crgd-Apgw/profile-framedphoto-shrink_400_400/0/1714239851076?e=1715896800&v=beta&t=t37pATUI_AEcg2Ca373uP-mCRfUq_bZy7IAHfAes1do" alt={doctor.name} className="mx-auto rounded-full w-24 h-24" />
@@ -83,6 +85,7 @@ const DoctorListPage = () => {
         </li>
       ))}
     </ul>
+    </div>
   );
 };
 
