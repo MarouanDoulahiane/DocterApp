@@ -1,62 +1,101 @@
     import React, { useState, useEffect } from 'react';
     import { useNavigate, useLocation } from 'react-router-dom';
+    import axios from 'axios';
+
 
     const RegistrationPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [isLogin, setIsLogin] = useState(location.pathname === '/login');
     const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     });
     const [error, setError] = useState('');
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevState) => ({
-        ...prevState,
-        [name]: value
-        }));
+  
+    
+    const authenticateUser = async (sessionId) => {
+      try {
+        const response = await axios.get('/api/check_session/', {
+          headers: {
+            'Authorization': `Session ${sessionId}`,
+          },
+        });
+        if (response.data.isValid) {
+          // User is authenticated, you can now display protected content
+          console.log('User is authenticated:', response.data);
+          navigate('/');
+        } else {
+          // Session is no longer valid, clear the local storage
+          localStorage.removeItem('sessionId');
+        }
+      } catch (error) {
+        console.error('Authentication error:', error);
+        // Session is no longer valid, clear the local storage
+        localStorage.removeItem('sessionId');
+      }
     };
-
+  
+    useEffect(() => {
+      // Check if the user is already logged in
+      const sessionId = localStorage.getItem('sessionId');
+      if (sessionId) {
+        // Use the session ID to authenticate the user
+        authenticateUser(sessionId);
+      }
+    }, []);
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    };
+  
     const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        // Check if password matches confirm password
-        if (!isLogin && formData.password !== formData.confirmPassword) {
+      e.preventDefault();
+  
+      // Check if password matches confirm password
+      if (!isLogin && formData.password !== formData.confirmPassword) {
         setError('Password and Confirm Password do not match');
         return;
-        }
-
-        try {
+      }
+  
+      try {
         const url = isLogin ? 'http://localhost:8000/api/login/' : 'http://localhost:8000/api/register/';
         const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
         });
         const data = await response.json();
         if (response.ok) {
+          // Store the session ID in local storage
+          localStorage.setItem('sessionId', data.sessionId);
+          if (isLogin) {
+            authenticateUser(data.sessionId);
+          } else {
             navigate('/');
-            console.log(isLogin ? 'Login successful:' : 'Registration successful:', data);
+          }
+          console.log(isLogin ? 'Login successful:' : 'Registration successful:', data);
         } else {
-            setError(data.error || (isLogin ? 'Login failed' : 'Registration failed'));
+          setError(data.error || (isLogin ? 'Login failed' : 'Registration failed'));
         }
-        } catch (error) {
+      } catch (error) {
         console.error('Error during authentication:', error.message);
         setError('Error during authentication');
-        }
+      }
     };
-
+  
     const toggleAuthMode = () => {
-        setIsLogin((prevState) => !prevState);
-        setError('');
+      setIsLogin((prevState) => !prevState);
+      setError('');
     };
-
+  
     const [minHeight, setMinHeight] = useState(0);
 
     useEffect(() => {
