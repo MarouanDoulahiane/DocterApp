@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const DoctorListPage = () => {
+  const navigate = useNavigate(); // Initialize navigate
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
-    fetchDoctors();
-  }, []);
+    // Check if the user is logged in on component mount
+    const sessionId = localStorage.getItem('sessionId');
+    if (!sessionId) {
+      // User is not logged in, redirect to home page
+      navigate('/register');
+    } else {
+      // User is logged in, fetch doctors
+      fetchDoctors();
+    }
+  }, [navigate]);
 
   const fetchDoctors = async () => {
     try {
@@ -19,14 +29,11 @@ const DoctorListPage = () => {
 
   const handleBookAppointment = (doctorId, slot) => {
     // Implement booking logic here
-    console.log('Book appointment:', `Doctor ID: ${doctorId}, Slot: ${slot}`);
+    navigate(`/booking?doctorId=${doctorId}&date=${slot.date}&time=${slot.time}`);
   };
 
-
-  
-
   return (
-    <div className="container mx-auto p-12  ">
+    <div className="container mx-auto p-12">
       <ul className="grid grid-cols-1 gap-8">
         {doctors.map((doctor) => (
           <li key={doctor.id} className="bg-white rounded-lg shadow-md">
@@ -62,19 +69,18 @@ const DoctorListPage = () => {
                             <tr>
                                 <th className="px-4 py-2">Date</th>
                                 <th className="px-4 py-2">Time</th>
-                                <th className="px-4 py-2"></th> {/* Leave this empty for the book button */}
+                                <th className="px-4 py-2"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {doctor.time_slots.map((slot, index) => (
-                                <tr key={index} className="border-b border-gray-200">
-                                    <td className="px-4 py-2">{slot.date}</td>
-                                    <td className="px-4 py-2">{slot.time}</td>
-                                    <td className="px-4 py-2">
-                                        <button onClick={() => handleBookAppointment(doctor.id, slot)} className="bg-blue-500 text-white rounded-md py-1 px-2 font-semibold hover:bg-blue-600">Book</button>
-                                    </td>
-                                </tr>
-                            ))}
+                        {doctor.time_slots.map((slot, index) => (
+                          <tr key={index} className="border-b border-gray-200">
+                              <td className="px-4 py-2">{slot.date}</td>
+                              <td className="px-4 py-2">{slot.time}</td>
+                              <td className="px-4 py-2"><button onClick={() => handleBookAppointment(doctor.id, slot)} className="bg-blue-500 text-white rounded-md py-1 px-2 font-semibold hover:bg-blue-600">Book</button></td>
+                          </tr>
+                        ))}
+
                         </tbody>
                     </table>
                 ) : (

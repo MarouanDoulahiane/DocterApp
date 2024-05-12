@@ -10,6 +10,7 @@ import { AuthProvider } from './AuthContext'; // Import the AuthProvider
 import './index.css'; 
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
+import Booking from './components/Booking';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     <Route path="/register" element={<RegistrationPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/doctors" element={<DoctorListPage />} />
+                    <Route path="/booking" element={<Booking />} />
                 </Routes>
                 <Footer style={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} />
             </Router>

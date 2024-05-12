@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
@@ -8,6 +8,15 @@ const LoginPage = () => {
         password: ''
     });
     const [error, setError] = useState('');
+
+    // Check if the user is already logged in on component mount
+    useEffect(() => {
+        const sessionId = localStorage.getItem('sessionId');
+        if (sessionId) {
+            // User is already logged in, redirect to the desired location
+            navigate('/doctors');
+        }
+    }, [navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,8 +39,10 @@ const LoginPage = () => {
             const data = await response.json();
             if (response.ok) {
                 console.log('Login successful:', data);
+                // Store session ID in local storage upon successful login
+                localStorage.setItem('sessionId', data.sessionId);
                 // Redirect to main page or dashboard upon successful login
-                navigate('/');
+                navigate('/doctors');
             } else {
                 setError(data.error || 'Login failed');
             }

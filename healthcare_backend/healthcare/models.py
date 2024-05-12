@@ -25,3 +25,22 @@ class TimeSlot(models.Model):
     doctor = models.ForeignKey(Doctor, related_name='time_slots', on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
+
+
+
+# healthcare/models.py
+
+from django.db import models
+from django.contrib.auth.models import User
+from .models import Doctor
+
+class Appointment(models.Model):
+    user = models.ForeignKey(User, related_name='appointments', on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, related_name='appointments', on_delete=models.CASCADE)
+    date = models.DateField()
+    time = models.TimeField()
+    additional_info = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"Appointment with {self.doctor.name} on {self.date} at {self.time}"
+
