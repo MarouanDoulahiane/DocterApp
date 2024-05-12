@@ -35,11 +35,14 @@ from django.contrib.auth.models import User
 from .models import Doctor
 
 class Appointment(models.Model):
-    user = models.ForeignKey(User, related_name='appointments', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='appointments', on_delete=models.CASCADE, null=True, blank=True)
     doctor = models.ForeignKey(Doctor, related_name='appointments', on_delete=models.CASCADE)
+    doctorName = models.CharField(max_length=100, default="")
+    doctorId = models.IntegerField(default=0)
     date = models.DateField()
     time = models.TimeField()
     additional_info = models.TextField(blank=True)
+    joined = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Appointment with {self.doctor.name} on {self.date} at {self.time}"

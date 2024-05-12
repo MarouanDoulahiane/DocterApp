@@ -28,10 +28,20 @@ class UserSerializer(serializers.ModelSerializer):
     
 from .models import Doctor, TimeSlot
 
+from rest_framework import serializers
+from .models import Doctor, Appointment
+
 class DoctorSerializer(serializers.ModelSerializer):
+    appointments = serializers.SerializerMethodField()
+
     class Meta:
         model = Doctor
-        fields = ['id', 'name', 'specialty', 'address', 'city', 'payment', 'time_slots']
+        fields = ['id', 'name', 'specialty', 'address', 'city', 'payment', 'time_slots', 'appointments']
+
+    def get_appointments(self, obj):
+        appointments = Appointment.objects.filter(doctor=obj)
+        return [{'date': appointment.date, 'time': appointment.time, 'confirmed': appointment.user is not None} for appointment in appointments]
+
 
 class TimeSlotSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,8 +49,8 @@ class TimeSlotSerializer(serializers.ModelSerializer):
         fields = ['id', 'date', 'time'] 
 
 
-
-# healthcare/serializers.py
+# add here your code
+        # serializers.py
 
 from rest_framework import serializers
 from .models import Appointment
@@ -48,5 +58,4 @@ from .models import Appointment
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
-        fields = '__all__'
-
+        fields = ['id', 'user', 'doctor', 'date', 'time', 'additional_info', 'doctorName']

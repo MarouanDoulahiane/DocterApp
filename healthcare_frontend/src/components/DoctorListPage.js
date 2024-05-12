@@ -28,9 +28,13 @@ const DoctorListPage = () => {
   };
 
   const handleBookAppointment = (doctorId, slot) => {
-    // Implement booking logic here
-    navigate(`/booking?doctorId=${doctorId}&date=${slot.date}&time=${slot.time}`);
-  };
+    // Retrieve username from local storage or session
+    const username = localStorage.getItem('username'); // Adjust according to your implementation
+
+    // Navigate to the booking page with doctorId, date, time, and username
+    navigate(`/booking?doctorId=${doctorId}&date=${slot.date}&time=${slot.time}&username=${username}`);
+};
+
 
   return (
     <div className="container mx-auto p-12">

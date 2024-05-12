@@ -53,13 +53,13 @@ const RegistrationPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         // Check if password matches confirm password
         if (!isLogin && formData.password !== formData.confirmPassword) {
             setError('Password and Confirm Password do not match');
             return;
         }
-
+    
         try {
             const url = isLogin ? 'http://localhost:8000/api/login/' : 'http://localhost:8000/api/register/';
             const response = await fetch(url, {
@@ -73,6 +73,9 @@ const RegistrationPage = () => {
             if (response.ok) {
                 // Store the session ID in local storage
                 localStorage.setItem('sessionId', data.sessionId);
+                // Store the username in local storage
+                localStorage.setItem('username', formData.username); // Add this line
+    
                 if (isLogin) {
                     authenticateUser(data.sessionId);
                 } else {
@@ -87,6 +90,7 @@ const RegistrationPage = () => {
             setError('Error during authentication');
         }
     };
+    
 
     const toggleAuthMode = () => {
         setIsLogin((prevState) => !prevState);

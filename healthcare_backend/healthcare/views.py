@@ -17,6 +17,12 @@ from django.contrib.sessions.models import Session
 class DoctorListAPIView(generics.ListAPIView):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+from.models import Doctor, TimeSlot, Appointment
+from.serializers import AppointmentSerializer
 
 @api_view(['POST'])
 def book_appointment(request, doctor_id):
@@ -126,6 +132,81 @@ def doctors_list(request):
 
     return Response(serializer.data)
 
+
+
+
+from rest_framework.decorators import api_view
+
+# views.py
+
+from django.contrib.auth.models import User
+
+@api_view(['POST'])
+def confirm_booking(request, doctor_id):
+    doctorId = request.data.get('doctorId')
+    # convert doctorId to integer
+    doctor = get_object_or_404(Doctor, id=int(doctorId))
+    date = request.data.get('date')
+    time = request.data.get('time')
+    username = request.data.get('username')  # Retrieve username from request data
+
+    # Retrieve user based on the provided username
+    user = User.objects.get(username=username)
+    doctor = Doctor.objects.get(id=int(doctorId))
+
+    # Create the appointment and associate it with the doctor and user
+    appointment = Appointment.objects.create(doctor=doctor, user=user, date=date, time=time, doctorName=doctor.name, doctorId=doctor.id)
+
+    # Remove the booked time slot from the doctor's availability
+    time_slot = TimeSlot.objects.filter(doctor=doctor, date=date, time=time).first()
+    if time_slot:
+        time_slot.delete()
+
+    return Response({'message': 'Booking confirmed successfully'}, status=status.HTTP_201_CREATED)
+
+
+# views.py
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .models import Appointment
+from .serializers import AppointmentSerializer
+
+class UserAppointmentsAPIView(APIView):
+    def get(self, request):
+        # Retrieve username from query parameters
+        username = request.query_params.get('username', None)
+        if username is None:
+            return Response({'error': 'Username not provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Retrieve user's appointments based on username
+        appointments = Appointment.objects.filter(user__username=username)
+
+        # Serialize appointments data
+        serializer = AppointmentSerializer(appointments, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK) 
+    
+
+# views.py
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Appointment
+
+@api_view(['POST'])
+def join_appointment(request, appointment_id):
+    try:
+        appointmentId = int(request.data.get('appointmentId'))
+        # Retrieve the appointment based on the provided appointment ID
+        appointment = Appointment.objects.get(id=appointmentId)
+        # Set joined to True
+        appointment.joined = True
+        appointment.save()
+        return Response({'message': 'Appointment joined successfully'}, status=status.HTTP_200_OK)
+    except Appointment.DoesNotExist:
+        return Response({'error': 'Appointment not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 

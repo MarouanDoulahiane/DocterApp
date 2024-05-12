@@ -9,10 +9,14 @@ from healthcare.views import check_session
 from healthcare.views import DoctorListAPIView
 from healthcare.views import doctors_list
 from healthcare.views import get_doctor
-from healthcare.views import book_appointment
+from healthcare.views import confirm_booking
+from healthcare.views import UserAppointmentsAPIView
+from healthcare.views import join_appointment
 
 urlpatterns = [
-    path('api/book_appointment/<int:doctor_id>/', book_appointment, name='book_appointment'),
+    path('api/appointments/<int:appointment_id>/join/', join_appointment, name='join_appointment'),
+    path('api/user/appointments/', UserAppointmentsAPIView.as_view(), name='user_appointments'),
+    path('api/book/<int:doctor_id>/', confirm_booking, name='confirm_booking'),
     path('api/register/', register, name='register'),
     path('api/login/', custom_login, name='login'),
     path('api/check_session/', check_session, name='check_session'),

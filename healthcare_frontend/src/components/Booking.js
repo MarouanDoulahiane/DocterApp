@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // Import useHistory
 import axios from 'axios';
 
 const Booking = () => {
@@ -10,6 +10,12 @@ const Booking = () => {
   const doctorId = queryParams.get('doctorId');
   const date = queryParams.get('date');
   const time = queryParams.get('time');
+  const username = queryParams.get('username');
+
+  const history = useNavigate(); // Initialize useHistory
+
+  // State to manage the visibility of the success popup
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   // State to store doctor's information
   const [doctorInfo, setDoctorInfo] = useState(null);
@@ -46,29 +52,29 @@ const Booking = () => {
   };
 
   // Handle form submission
-  // booking.js
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8000/api/book_appointment/${doctorId}/`, {
+      const response = await axios.post(`http://localhost:8000/api/book/${doctorId}/`, {
+        doctorId, // Include doctorId in the request body
         date,
         time,
-        userDetails: formData
+        username,
       });
-      console.log('Appointment booked:', response.data);
-      // Reset form after submission
-      setFormData({
-        name: '',
-        email: '',
-        phoneNumber: '',
-        additionalInfo: ''
-      });
+      // print the request and response
+      console.log('Request:', response.config);
+      console.log('Response:', response.data);
+      // Show success popup
+      setShowSuccessPopup(true);
+      // Redirect to homepage after a delay
+      setTimeout(() => {
+        history('/');
+      }, 3000); // Adjust the delay as needed
     } catch (error) {
-      console.error('Error booking appointment:', error);
+      console.error('Error confirming booking:', error);
+      // Handle error
     }
   };
-  
   
 
   return (
@@ -83,7 +89,7 @@ const Booking = () => {
             <p>Address: {doctorInfo.address}, {doctorInfo.city}</p>
             <hr className="my-6" />
             <form onSubmit={handleSubmit}>
-  {/* Name Input */}
+              {/* Name Input */}
   <div className="mb-4">
     <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
     <input
@@ -140,20 +146,31 @@ const Booking = () => {
 
   {/* Submit Button */}
   <div className="flex justify-end">
-    <button
-      type="submit"
-      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-200"
-    >
-      Book Appointment
-    </button>
-  </div>
-</form>
+  <button
+  type="submit"
+  // if it's confirmed make the button say "Appointment Confirmed" otherwise "Book Appointment" and make it disabled if it's confirmed
+  className={`px-4 py-2 bg-blue-500 text-white rounded-md ${doctorInfo && doctorInfo.confirmed ? "cursor-not-allowed" : "hover:bg-blue-600"}`}
+  disabled={doctorInfo && doctorInfo.confirmed}
+>
+  {doctorInfo && doctorInfo.confirmed ? "Appointment Confirmed" : "Book Appointment"}
+</button>
 
+  </div>
+            </form>
           </div>
         ) : (
           <p>Loading...</p>
         )}
       </div>
+      {/* Success popup */}
+      {showSuccessPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-green-500 bg-opacity-75">
+          <div className="bg-white rounded-lg p-8">
+            <p className="text-green-700 font-semibold">Appointment Confirmed!</p>
+            <p>You will be redirected to the homepage shortly.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

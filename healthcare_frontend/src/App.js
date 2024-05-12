@@ -11,6 +11,7 @@ import './index.css';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import Booking from './components/Booking';
+import AppointmentsPage from './components/Appointments';
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/doctors" element={<DoctorListPage />} />
                     <Route path="/booking" element={<Booking />} />
+                    <Route path="/appointments" element={<AppointmentsPage />} />
                 </Routes>
                 <Footer style={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} />
             </Router>
