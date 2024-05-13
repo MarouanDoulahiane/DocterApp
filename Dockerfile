@@ -2,7 +2,7 @@ FROM python:3
 
 # Install system-wide Python packages
 COPY healthcare_backend/requirements.txt requirements.txt
-RUN python3 0 -m pip install --upgrade pip
+RUN python3 -m pip install --upgrade pip
 RUN python3 -m venv venv
 RUN source venv/bin/activate
 RUN pip3 install -r requirements.txt
