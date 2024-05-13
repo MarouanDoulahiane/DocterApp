@@ -1,31 +1,33 @@
 FROM ubuntu
 
-# Install the necessary packages
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     npm
 
-# Install the necessary python packages
-COPY healthcare_backend/requirements.txt requirements
+# Install system-wide Python packages
+COPY healthcare_backend/requirements.txt /tmp/requirements.txt
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
-RUN pip3 install -r requirements
+# Create a virtual environment and install Python packages
+RUN python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 # Install the necessary node packages
-COPY healthcare_frontend/package.json package.json
-
-RUN npm install
+COPY healthcare_frontend/package.json /tmp/package.json
+RUN npm install --cache /tmp/npm-cache --prefer-offline
 
 # Copy the source code
-COPY healthcare_backend healthcare_backend
-
-COPY healthcare_frontend healthcare_frontend
+COPY healthcare_backend /app/healthcare_backend
+COPY healthcare_frontend /app/healthcare_frontend
 
 # Run the backend
-COPY script.sh script.sh
+COPY script.sh /app/script.sh
+RUN chmod +x /app/script.sh
 
-RUN chmod +x script.sh
-
+WORKDIR /app
 EXPOSE 3000
 
 CMD ["./script.sh"]
