@@ -1,19 +1,17 @@
-# create a script that install the necessary packages for the project
+#!/bin/bash
 
-# install the necessary packages
-cd healthcare_frontend
+# Install the necessary packages for the project
+cd /app/healthcare_frontend
 npm install
-cd ..
 
-cd healthcare_backend
+cd /app/healthcare_backend
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# run the backend
-python3 manage.py runserver&
+# Run the backend
+python3 manage.py runserver &
 
-# run the frontend
-cd ../healthcare_frontend
+# Run the frontend
+cd /app/healthcare_frontend
 npm start
-
