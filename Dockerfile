@@ -4,7 +4,7 @@ FROM ubuntu
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
-    npm \
+    npm
 
 # Install the necessary python packages
 COPY healthcare_backend/requirements.txt requirements
