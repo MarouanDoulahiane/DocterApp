@@ -70,9 +70,9 @@ const DoctorListPage = () => {
                     <p className="text-gray-600">{doctor.payment}</p>
                   </div>
                 </div>
-                <div className="mt-6">
+                {/* <div className="mt-6">
                   <a href={`/doctor/${doctor.id}`} className="block bg-blue-500 text-white rounded-md py-2 px-4 text-center font-semibold transition duration-300 hover:bg-blue-600">Prendre rendez-vous</a>
-                </div>
+                </div> */}
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold mb-4">Available Time Slots</h3>
