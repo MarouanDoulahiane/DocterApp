@@ -76,10 +76,26 @@ const Booking = () => {
       // Handle error
     }
   };
-  
+  const [minHeight, setMinHeight] = useState(0);
+
+    useEffect(() => {
+        const updateMinHeight = () => {
+            const windowHeight = window.innerHeight;
+            const footerHeight = 72 + 60; // Assuming the footer has a fixed height of 50 pixels
+            const newMinHeight = windowHeight - footerHeight;
+            setMinHeight(newMinHeight);
+        };
+
+        updateMinHeight();
+        window.addEventListener('resize', updateMinHeight);
+
+        return () => {
+            window.removeEventListener('resize', updateMinHeight);
+        };
+    }, []);
 
   return (
-    <div className="container mx-auto p-12">
+    <div className="container mx-auto p-12" style={{ minHeight: `${minHeight}px` }}>
       <div className="max-w-lg mx-auto">
         <h1 className="text-2xl font-semibold mb-6">Booking Details</h1>
         {doctorInfo ? (

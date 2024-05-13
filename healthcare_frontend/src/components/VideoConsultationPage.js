@@ -1,7 +1,6 @@
-import { data } from 'autoprefixer';
 import axios from 'axios';
 import React, { useState, useEffect, useRef, } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const VideoConsultationPage = () => {
 
@@ -11,6 +10,8 @@ const VideoConsultationPage = () => {
   const [isJoiningCall, setIsJoiningCall] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userAppointments, setUserAppointments] = useState([]);
+  const [showThankYou, setShowThankYou] = useState(false); // State to control the visibility of the Thank You popup
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +50,13 @@ const VideoConsultationPage = () => {
         doctorId: appointment.doctorId,
         username: localStorage.getItem('username')
       });
-    navigate('/appointments');
+      setShowThankYou(true);
+
+      // Wait for a few seconds before redirecting
+      setTimeout(() => {
+        // Redirect to the appointments page
+        navigate('/appointments');
+      }, 3000); // Adjust the delay time as needed
     } catch (error) {
       console.error('Error ending appointment:', error);
     }
@@ -154,6 +161,14 @@ const VideoConsultationPage = () => {
           )}
         </div>
       </div>
+      {showThankYou && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-semibold mb-4">Thank You!</h2>
+            <p className="text-lg">Your appointment has ended successfully.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

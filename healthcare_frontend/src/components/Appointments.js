@@ -8,6 +8,13 @@ const AppointmentsPage = () => {
   const [minHeight, setMinHeight] = useState(0);
 
   useEffect(() => {
+    const sessionId = localStorage.getItem('sessionId');
+    if (!sessionId) {
+      history('/register');
+    }
+  }, [history]);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const username = localStorage.getItem('username');

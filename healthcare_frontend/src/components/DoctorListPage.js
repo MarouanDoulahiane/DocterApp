@@ -44,9 +44,25 @@ const DoctorListPage = () => {
     const username = localStorage.getItem('username');
     navigate(`/booking?doctorId=${doctorId}&date=${slot.date}&time=${slot.time}&username=${username}`);
   };
+  const [minHeight, setMinHeight] = useState(0);
 
+  useEffect(() => {
+      const updateMinHeight = () => {
+          const windowHeight = window.innerHeight;
+          const footerHeight = 72 + 60; // Assuming the footer has a fixed height of 50 pixels
+          const newMinHeight = windowHeight - footerHeight;
+          setMinHeight(newMinHeight);
+      };
+
+      updateMinHeight();
+      window.addEventListener('resize', updateMinHeight);
+
+      return () => {
+          window.removeEventListener('resize', updateMinHeight);
+      };
+  }, []);
   return (
-    <div className="container mx-auto p-12">
+    <div className="container mx-auto p-12" style={{ minHeight: `${minHeight}px` }}>
       <ul className="grid grid-cols-1 gap-8">
         {currentDoctors.map((doctor) => (
           <li key={doctor.id} className="bg-white rounded-lg shadow-md">
