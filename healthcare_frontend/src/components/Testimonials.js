@@ -1,6 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import doctorsImage from '../images/doctors.png';
 
 const Testimonials = () => {
     return (

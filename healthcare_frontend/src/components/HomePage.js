@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import NavBar from './NavBar';
-import Footer from './Footer';
 import HeroElement from './HeroElement';
-import Testimonials from './Testimonials';
-import SearchBar from './SearchBar';
 
 const HomePage = () => {
 

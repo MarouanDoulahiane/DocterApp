@@ -1,7 +1,5 @@
 // create a box for search input and button to search for a doctor
-
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 
 const SearchBar = () => {
