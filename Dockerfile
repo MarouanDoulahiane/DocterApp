@@ -1,11 +1,13 @@
 FROM ubuntu
 
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-xyz \
-    python3-pip \
-    npm
+    python3 
+
+RUN apt-cache sratch python3-xyz
+
+
 
 # Install system-wide Python packages
 COPY healthcare_backend/requirements.txt /tmp/requirements.txt
