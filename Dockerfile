@@ -5,9 +5,9 @@ COPY healthcare_backend/requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 # Install the necessary node packages
-COPY healthcare_frontend/package.json /tmp/package.json
+COPY healthcare_frontend/package.json package.json
 RUN apt-get update && apt-get install -y npm
-RUN npm install --cache /tmp/npm-cache --prefer-offline
+RUN npm install
 
 # Copy the source code
 COPY healthcare_backend /app/healthcare_backend
