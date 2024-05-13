@@ -5,7 +5,7 @@ FROM ubuntu
 RUN apt-get update && apt-get install -y \
     python3 
 
-RUN apt-cache sratch python3-xyz
+RUN apt-cache search python3-xyz
 
 
 
