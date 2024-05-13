@@ -15,4 +15,4 @@ RUN chmod +x /app/script.sh
 WORKDIR /app
 EXPOSE 3000
 
-CMD ["./script.sh"]
+CMD ["sh", "/app/script.sh"]
