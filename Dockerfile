@@ -3,6 +3,7 @@ FROM ubuntu
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     python3 \
+    python3-xyz \
     python3-pip \
     npm
 
