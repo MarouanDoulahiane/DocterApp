@@ -68,7 +68,8 @@ const Booking = () => {
       setShowSuccessPopup(true);
       // Redirect to homepage after a delay
       setTimeout(() => {
-        history('/');
+        // redirect to the appointment page
+        history('/appointments');
       }, 3000); // Adjust the delay as needed
     } catch (error) {
       console.error('Error confirming booking:', error);
@@ -167,7 +168,7 @@ const Booking = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-green-500 bg-opacity-75">
           <div className="bg-white rounded-lg p-8">
             <p className="text-green-700 font-semibold">Appointment Confirmed!</p>
-            <p>You will be redirected to the homepage shortly.</p>
+            <p>You will be redirected to the Appointment page shortly.</p>
           </div>
         </div>
       )}

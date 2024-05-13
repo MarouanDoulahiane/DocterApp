@@ -131,7 +131,21 @@ def doctors_list(request):
         doctor_data['time_slots'] = time_slot_serializer.data
 
     return Response(serializer.data)
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Appointment
 
+@api_view(['DELETE'])
+def delete_appointment(request, appointment_id):
+    try:
+        # Retrieve the appointment based on the provided appointment ID
+        appointment = Appointment.objects.get(id=appointment_id)
+        # Delete the appointment
+        appointment.delete()
+        return Response({'message': 'Appointment deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+    except Appointment.DoesNotExist:
+        return Response({'error': 'Appointment not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -153,9 +167,11 @@ def confirm_booking(request, doctor_id):
     # Retrieve user based on the provided username
     user = User.objects.get(username=username)
     doctor = Doctor.objects.get(id=int(doctorId))
+    # check if the appointment was the one that we really wanted to book
 
     # Create the appointment and associate it with the doctor and user
-    appointment = Appointment.objects.create(doctor=doctor, user=user, date=date, time=time, doctorName=doctor.name, doctorId=doctor.id)
+    appointment = Appointment.objects.create(doctor=doctor, user=user, date=date, time=time, doctorName=doctor.name, doctorId=int(doctorId))
+
 
     # Remove the booked time slot from the doctor's availability
     time_slot = TimeSlot.objects.filter(doctor=doctor, date=date, time=time).first()
@@ -210,3 +226,51 @@ def join_appointment(request, appointment_id):
 
 
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Doctor, TimeSlot
+
+@api_view(['POST'])
+def add_slot_back(request, doctor_id):
+    try:
+        date = request.data.get('date')
+        time = request.data.get('time')
+        doctorId = request.data.get('doctorId')
+        doctor = Doctor.objects.get(id=doctorId)
+        username = request.data.get('username')
+
+        appointment = Appointment.objects.filter(doctor=doctor, date=date, time=time).first()
+
+        # Check if the appointment exists
+        if not appointment:
+            return Response({'error': 'Appointment not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # remove the appointment
+        appointment.delete()
+
+        # Create a new time slot for the doctor
+        TimeSlot.objects.create(doctor=doctor, date=date, time=time)
+        
+        return Response({'message': 'Slot added back successfully'}, status=status.HTTP_201_CREATED)
+    except Doctor.DoesNotExist:
+        return Response({'error': 'Doctor not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def end_slot(request, appointmentId):
+    date = request.data.get('date')
+    time = request.data.get('time')
+    doctorId = request.data.get('doctorId')
+    doctor = Doctor.objects.get(id=doctorId)
+    username = request.data.get('username')
+
+    appointment = Appointment.objects.filter(doctor=doctor, date=date, time=time).first()
+
+    # Check if the appointment exists
+    if not appointment:
+        return Response({'error': 'Appointment not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # remove the appointment
+    appointment.delete()
+    return Response({'message': 'Slot ended successfully'}, status=status.HTTP_200_OK)

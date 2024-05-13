@@ -12,8 +12,12 @@ from healthcare.views import get_doctor
 from healthcare.views import confirm_booking
 from healthcare.views import UserAppointmentsAPIView
 from healthcare.views import join_appointment
+from healthcare.views import add_slot_back
+from healthcare.views import end_slot
 
 urlpatterns = [
+    path('api/appointments/<int:appointmentId>/', end_slot, name='end_slot'),
+    path('api/doctors/<int:doctor_id>/slots/add/', add_slot_back, name='add_slot_back'),
     path('api/appointments/<int:appointment_id>/join/', join_appointment, name='join_appointment'),
     path('api/user/appointments/', UserAppointmentsAPIView.as_view(), name='user_appointments'),
     path('api/book/<int:doctor_id>/', confirm_booking, name='confirm_booking'),

@@ -12,6 +12,7 @@ import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import Booking from './components/Booking';
 import AppointmentsPage from './components/Appointments';
+import VideoConsultationPage from './components/VideoConsultationPage';
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                     <Route path="/doctors" element={<DoctorListPage />} />
                     <Route path="/booking" element={<Booking />} />
                     <Route path="/appointments" element={<AppointmentsPage />} />
+                    <Route path="/video/:appointmentId" element={<VideoConsultationPage />} />
                 </Routes>
                 <Footer style={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} />
             </Router>

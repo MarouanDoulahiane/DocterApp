@@ -12,7 +12,7 @@ class Command(BaseCommand):
         fake = Faker()
 
         # Generate fake doctors
-        for _ in range(10):  # Adjust the range as needed
+        for _ in range(25):  # Adjust the range as needed
             doctor = Doctor(
                 name=fake.name(),
                 specialty=fake.random_element(elements=('Cardiology', 'Dermatology', 'Endocrinology', 'Gastroenterology', 'Hematology', 'Nephrology', 'Neurology', 'Oncology', 'Ophthalmology', 'Orthopedics')),
