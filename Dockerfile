@@ -1,8 +1,8 @@
 FROM python:3
 
 # Install system-wide Python packages
-COPY healthcare_backend/requirements.txt /tmp/requirements.txt
-RUN pip install --no-cache-dir -r /tmp/requirements.txt
+COPY healthcare_backend/requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
 # Install the necessary node packages
 COPY healthcare_frontend/package.json package.json
